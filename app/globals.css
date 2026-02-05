@@ -146,4 +146,9 @@
   .active-nav-item {
     @apply text-app-accent-light dark:text-app-accent-dark before:opacity-100 bg-app-accent-light/30 dark:bg-app-accent-dark/30 font-bold
   }
+  .toggle-item {
+    @apply text-base w-[calc(100%/3-4px)] dark:focus:border-app-accent-dark focus:border-app-accent-light dark:focus:text-app-accent-dark focus:text-app-accent-light
+  }
+
+
 }
