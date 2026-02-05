@@ -20,17 +20,19 @@ import TextAreaController
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { createNewTaskAction } from "@/lib/actions/create-new-task-action";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const handleCreateTask = async (formData: schemaCreateTaskT, reset: UseFormReset<schemaCreateTaskT>, setLoading: Dispatch<SetStateAction<boolean>>) => {
   setLoading(true)
   try{
     await createNewTaskAction(formData);
     reset()
-    toast.success("Задача успешно добавлена")
   } catch (e){
+    if (isRedirectError(e)) throw e
     toast.error("Ошибка добалвения задачи");
   } finally{
     setLoading(false);
+    toast.success("Задача успешно добавлена")
   }
 }
 
