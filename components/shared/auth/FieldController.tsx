@@ -8,6 +8,7 @@ interface Props<T extends FieldValues = FieldValues>{
   control: Control<T>;
   type?: "text" | "password";
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const FieldController = <T extends FieldValues>(
@@ -17,6 +18,7 @@ const FieldController = <T extends FieldValues>(
     control,
     placeholder = "",
     type = "text",
+    disabled = false,
   }
   : Props<T>) => {
   return (
@@ -33,6 +35,7 @@ const FieldController = <T extends FieldValues>(
             id={ field.name }
             { ...field }
             type={ type }
+            disabled={ disabled }
             placeholder={ placeholder }
             aria-invalid={ fieldState.invalid }
           />

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: [ 'latin' ],
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: Readonly<{
       disableTransitionOnChange
     >
       { children }
+      <Toaster />
     </ThemeProvider>
     </body>
     </html>
