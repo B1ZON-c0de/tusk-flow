@@ -9,6 +9,8 @@ import { TaskCategoryLabels, TaskPriorityLabels } from "@/lib/data/enum-labels";
 import { Checkbox } from "@/components/ui/checkbox";
 import { updateStatusTask } from "@/lib/actions/update-task";
 import { toast } from "sonner";
+import DeleteButton from "@/components/shared/DeleteButton";
+
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -54,12 +56,15 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "completed",
     header: "Статус",
     cell: ({ row }) => (
-      <div className="flex flex-col justify-center items-center gap-2">
+      <div
+        className="flex flex-col justify-center items-center gap-2"
+      >
         <Checkbox
           disabled={ row.original.completed }
           checked={ row.original.completed }
           onCheckedChange={ async (newValue) => {
             try{
+              console.log(row.original.title)
               await updateStatusTask(newValue, row.original.id)
               toast.success("Статус задачи успешно изменен")
             } catch (e){
@@ -74,6 +79,15 @@ export const columns: ColumnDef<Task>[] = [
       </div>
     )
   },
+  {
+    id: "delete",
+    header: "",
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center">
+        <DeleteButton id={ row.original.id } />
+      </div>
+    )
+  }
 ]
 
 

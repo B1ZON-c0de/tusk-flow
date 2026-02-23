@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export const updateStatusTask = async (newValue: boolean, taskId: string) => {
+  console.log(taskId);
   try{
     await prisma.task.update({
         where: {
@@ -14,8 +15,9 @@ export const updateStatusTask = async (newValue: boolean, taskId: string) => {
         }
       }
     )
-    revalidatePath("/dashboard")
   } catch (e){
     throw new Error("Не удолось изсенить статус задачи")
   }
+  revalidatePath("/dashboard")
+
 }

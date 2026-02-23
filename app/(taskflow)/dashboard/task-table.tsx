@@ -29,7 +29,7 @@ const TaskTable =
     const table = useReactTable({
       data,
       columns,
-      getCoreRowModel: getCoreRowModel()
+      getCoreRowModel: getCoreRowModel(),
     })
     return (
       <div className="border">
@@ -39,7 +39,10 @@ const TaskTable =
               <TableRow key={ headerGroup.id }>
                 { headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={ header.id } className="text-center font-bold">
+                    <TableHead
+                      key={ header.id }
+                      className="text-center font-bold"
+                    >
                       { header.isPlaceholder ? null : flexRender(
                         header.column.columnDef.header,
                         header.getContext()
@@ -70,7 +73,7 @@ const TaskTable =
                   colSpan={ columns.length }
                   className="h-24 text-center"
                 >
-                  No results.
+                  Пусто
                 </TableCell>
               </TableRow>
             ) }
