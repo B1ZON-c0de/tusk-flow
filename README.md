@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TuskFlow — простой таск-трекер
 
-## Getting Started
+Таск-менеджер с аутентификацией, созданный на Next.js. Можно создавать задачи,
+фильтровать их по категориям и приоритетам, отмечать выполненное и удалять.
+Сделал для себя, чтобы попрактиковаться с Next.js App Router и серверными
+действиями.
 
-First, run the development server:
+## О проекте
+
+Обычный таск-трекер, где каждый пользователь видит только свои задачи. Никакой
+сложной логики — просто создать, посмотреть список, отметить готовое. Задачи
+группируются по категориям (работа/личное/учеба) и приоритетам.
+
+## Зачем я это сделал
+
+Хотелось:
+
+- Разобраться с серверными экшенами в Next.js (до этого делал всё через API
+  routes)
+- Попробовать Better-Auth — показалось удобнее, чем настраивать NextAuth с нуля
+- Поработать с shadcn/ui и кастомизировать его под себя
+- Сделать что-то полезное, чтобы закрепить работу с Prisma и PostgreSQL
+
+## Функционал
+
+- Регистрация и вход (email/password или через GitHub)
+- Создание задачи с заголовком, описанием, категорией и приоритетом
+- Просмотр всех задач в таблице
+- Отметка задачи как выполненной (чекбокс)
+- Удаление задачи с подтверждением
+- Тёмная/светлая тема (переключается в сайдбаре)
+
+## Архитектура / Особенности реализации
+
+Структура более-менее стандартная для Next.js:
+
+- `app/(taskflow)` — защищённая часть с дашбордом и созданием задач
+- `app/auth` — страницы логина и регистрации
+- `components/shared` — переиспользуемые компоненты, разбиты по папкам (auth,
+  create-task, user, app-sidebar и т.д.)
+- `lib/actions` — серверные экшены для работы с задачами
+- `lib/shema` — схемы валидации (zod) для форм
+
+Из интересного:
+
+- Валидация форм через react-hook-form + zod, для каждого типа поля сделал свой
+  контроллер (FieldController, SelectController, ToggleController) — удобно
+  переиспользовать
+- Кастомные хуки для работы с enum-типами (`typesafeValues`), чтобы не терять
+  типизацию при маппинге значений из Prisma
+- Better-Auth вместо NextAuth — приятно удивил, меньше бойлерплейта
+- Для удаления задачи сделал диалог с подтверждением, чтобы случайно не стереть
+
+## Стек
+
+- **Next.js 15** (App Router)
+- **TypeScript**
+- **Prisma** + PostgreSQL
+- **Better-Auth** — аутентификация
+- **React Hook Form** + **Zod** — формы и валидация
+- **shadcn/ui** + **Tailwind** — стили
+- **TanStack Table** — таблица с задачами
+
+## Как запустить
+
+1. Клонировать репозиторий
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/B1ZON-c0de/tusk-flow.git
+cd tusk-flow
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установить зависимости
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+# или npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Настроить переменные окружения
 
-## Learn More
+```bash
+cp .env.example .env.local
+```
 
-To learn more about Next.js, take a look at the following resources:
+Заполнить:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `DATABASE_URL` — строка подключения к PostgreSQL
+- `BETTER_AUTH_SECRET` — сгенерировать (можно через `openssl rand -hex 32`)
+- `BETTER_AUTH_URL` — `http://localhost:3000` (для разработки)
+- Для GitHub OAuth: `GITHUB_CLIENT_ID` и `GITHUB_CLIENT_SECRET` (если нужен вход
+  через GitHub)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Накатить схему БД
 
-## Deploy on Vercel
+```bash
+npx prisma db push
+# или npx prisma migrate dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Запустить dev-сервер
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm dev
+```
+
+## Что можно улучшить
+
+- Пагинацию в таблице задач (если задач станет много)
+- Редактирование задачи
+- Фильтры по категориям и приоритетам прямо в таблице
+- Сортировку по дате создания
+- Нормальный поиск (пока заглушка в хедере)
+- Добавить возможность загружать файлы к задачам (но это уже избыточно,
+  наверное)
+
+## Скриншоты
+
+![Главаная](dashboard.png)
+
+![Содать задачу](create-task.png)
+
+![Светлая тема](light-theme.png)
+
+![Странца логина](login-page.png)
